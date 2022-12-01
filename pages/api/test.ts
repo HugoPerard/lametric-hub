@@ -8,7 +8,7 @@ export default function handler(
   res.status(200).json({
     frames: [
       {
-        text: "0 ",
+        text: "test",
         icon: null,
       },
     ],
