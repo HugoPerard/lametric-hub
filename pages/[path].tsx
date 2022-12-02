@@ -1,7 +1,18 @@
+import {
+  Box,
+  Button,
+  chakra,
+  Code,
+  Flex,
+  Heading,
+  HStack,
+  Text,
+  useClipboard,
+} from "@chakra-ui/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { LaMetricData } from "../utils/types";
-import styles from "../styles/Home.module.css";
 
 const Page = () => {
   const router = useRouter();
@@ -15,23 +26,42 @@ const Page = () => {
       .then((data) => setData(data));
   }, [path]);
 
+  const url = `${process.env.NEXT_PUBLIC_URL}/${path}`;
+  const { onCopy, hasCopied } = useClipboard(url);
+
+  const hasGoodFormat =
+    Array.isArray(data?.frames) && data?.frames.every((frame) => !!frame.text);
+
   return (
-    <div style={{ padding: "2rem" }}>
-      <a
-        href={`${process.env.NEXT_PUBLIC_URL}`}
-        style={{
-          padding: "0.5rem",
-          border: "1px solid gray",
-          borderRadius: "5px",
-        }}
-      >
-        ⬅️ Go back
-      </a>
-      <p>/{path}</p>
-      <pre>
-        <code>{JSON.stringify(data, null, 4)}</code>
-      </pre>
-    </div>
+    <Flex direction="column" h="100vh" w="100vw">
+      <HStack w="full" bg="lightgray" px={4} py={2}>
+        <Link href="/">
+          <Text fontSize="xl" fontWeight="bold">
+            LaMetric Hub
+          </Text>
+        </Link>
+      </HStack>
+      <Box p={4}>
+        <HStack mb={4}>
+          <Heading>{url}</Heading>
+          <Button onClick={onCopy}>{hasCopied ? "Copied!" : "Copy"}</Button>
+        </HStack>
+        {!data ? (
+          <Text>Loading...</Text>
+        ) : (
+          <chakra.pre>
+            <Code
+              borderRadius="md"
+              p={4}
+              border="2px solid"
+              borderColor={hasGoodFormat ? "green" : "red"}
+            >
+              {JSON.stringify(data, null, 2)}
+            </Code>
+          </chakra.pre>
+        )}
+      </Box>
+    </Flex>
   );
 };
 
