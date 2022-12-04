@@ -26,7 +26,7 @@ const Page = () => {
       .then((data) => setData(data));
   }, [path]);
 
-  const url = `${process.env.NEXT_PUBLIC_URL}/${path}`;
+  const url = `${process.env.NEXT_PUBLIC_URL}/api/${path}`;
   const { onCopy, hasCopied } = useClipboard(url);
 
   const hasGoodFormat =
